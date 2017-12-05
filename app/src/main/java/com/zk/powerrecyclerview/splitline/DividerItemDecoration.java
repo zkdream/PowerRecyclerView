@@ -40,6 +40,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
         mDivider=a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
+
     }
 
     private void setOrientation(int orientation) {
