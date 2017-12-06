@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,12 +36,25 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
 
     private int mOrientation;
 
+    private int mWidth;
+    private int mHeight;
+
     public DividerItemDecoration(Context context,int orientation) {
         TypedArray a=context.obtainStyledAttributes(ATTRS);
         mDivider=a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
 
+    }
+    /**
+     * 支持自定义dividerDrawable
+     * @param context
+     * @param orientation
+     * @param dividerDrawable
+     */
+    public DividerItemDecoration(Context context, int orientation, Drawable dividerDrawable) {
+        mDivider = dividerDrawable;
+        setOrientation(orientation);
     }
 
     private void setOrientation(int orientation) {
@@ -58,6 +72,32 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
             drawHorizontal(c, parent);
         }
 
+    }
+
+    /**
+     * 支持设置分割线的样式
+     * @param drawable
+     */
+    public void setDrawable(@NonNull Drawable drawable) {
+        if(drawable == null) {
+            throw new IllegalArgumentException("兄弟你设置的分割线不存在");
+        } else {
+            this.mDivider = drawable;
+        }
+    }
+    /**
+     * 支持手动为无高宽的drawable制定宽度
+     * @param width
+     */
+    public void setWidth(int width) {
+        this.mWidth = width;
+    }
+    /**
+     * 支持手动为无高宽的drawable制定高度
+     * @param height
+     */
+    public void setHeight(int height) {
+        this.mHeight = height;
     }
 
 
@@ -97,9 +137,17 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         if (mOrientation==VERTICAL_LIST){
-            outRect.set(0,0,0,mDivider.getIntrinsicHeight());
+            outRect.set(0,0,0,getDividerHeight());
         }else {
-            outRect.set(0,0,mDivider.getIntrinsicWidth(),0);
+            outRect.set(0,0,getDividerWidth(),0);
         }
     }
+
+    private int getDividerWidth() {
+        return mWidth > 0 ? mWidth : mDivider.getIntrinsicWidth();
+    }
+    private int getDividerHeight() {
+        return mHeight > 0 ? mHeight : mDivider.getIntrinsicHeight();
+    }
+
 }
