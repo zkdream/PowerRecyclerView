@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zk.powerrecyclerview.sample.RefreshRecyclerActivity">
+
+    <com.zk.powerrecyclerview.widget.RefreshRecyclerView
+        android:id="@+id/rv_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        >
+    </com.zk.powerrecyclerview.widget.RefreshRecyclerView>
+    <TextView
+        android:id="@+id/load_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="正在加载数据..." />
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="当前暂无数据..." />
+</android.support.constraint.ConstraintLayout>

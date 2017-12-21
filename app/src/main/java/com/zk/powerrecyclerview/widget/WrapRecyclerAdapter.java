@@ -2,6 +2,7 @@ package com.zk.powerrecyclerview.widget;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,21 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mFooterViews=new SparseArray<>();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        if (isHeaderPosition(position)){
+//             查看第几个位置的键
+            return mHeaderViews.keyAt(position);
+        }
+        if (isFooterPosition(position)){
+            position=position-mHeaderViews.size()-mAdapter.getItemCount();
+            return mFooterViews.keyAt(position);
+        }
+        position=position-mHeaderViews.size();
+        return mAdapter.getItemViewType(position);
+
+    }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //
@@ -84,11 +100,12 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        if (isHeaderViewType(position)||isFooterViewType(position)){
+        if (isHeaderPosition(position)||isFooterPosition(position)){
             return;
         }
 //        计算一下位置
         final int adapterPosition= position - mHeaderViews.size();
+
         mAdapter.onBindViewHolder(holder,adapterPosition);
 
 //        设置点击和长按事件
@@ -110,21 +127,7 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
 
-        if (isHeaderPosition(position)){
-//             查看第几个位置的键
-            return mHeaderViews.keyAt(position);
-        }
-        if (isFooterPosition(position)){
-            position=position-mHeaderViews.size()-mAdapter.getItemCount();
-            return mFooterViews.keyAt(position);
-        }
-        position=position-mHeaderViews.size();
-        return mAdapter.getItemViewType(position);
-
-    }
 
     @Override
     public int getItemCount() {
@@ -190,12 +193,22 @@ public class WrapRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       }
     }
 
+    /**
+     * 是不是头部
+     * @param position
+     * @return
+     */
     private boolean isHeaderPosition(int position) {
         return position<mHeaderViews.size();
     }
 
+    /**
+     * 是不是底部
+     * @param position
+     * @return
+     */
     private boolean isFooterPosition(int position) {
-        return position<mFooterViews.size();
+        return position>=(mHeaderViews.size()+mAdapter.getItemCount());
     }
 
     /**
